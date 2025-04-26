@@ -2,7 +2,10 @@ name: sync-to-miro
 
 on:
   push:
-    paths: ["*.yaml"]
+    paths:
+      - "**/*.yml"
+      - "**/*.yaml"
+  workflow_dispatch:
 
 jobs:
   sync:
@@ -20,31 +23,29 @@ jobs:
         run: |
           python <<'PY'
           import os, yaml, glob, requests
+
           token  = os.environ['MIRO_TOKEN']
           board  = os.environ['MIRO_BOARD']
           hdr    = {'Authorization': f'Bearer {token}'}
 
-        colors = ['light_yellow', 'light_green', 'light_blue',
-          'light_pink', 'violet', 'grey']
+          colors = ['light_yellow', 'light_green', 'light_blue',
+                    'light_pink',  'violet',  'grey']
 
           x = 0
           for idx, file in enumerate(sorted(glob.glob("*.yaml"))):
               y = 0
               data = yaml.safe_load(open(file))
               for item in data:
-                  # --- 付箋作成 ---
                   r = requests.post(
                       f"https://api.miro.com/v2/boards/{board}/sticky_notes",
                       headers=hdr,
                       json={
-                        "data":   {"content": item['text']},
-                        "style":  {"fillColor": colors[idx % len(colors)]},
+                        "data": {"content": item['text']},
+                        "style": {"fillColor": colors[idx % len(colors)]},
                         "position": {"origin": "center", "x": x, "y": y}
                       }
                   )
-                  # --- レスポンスを表示 ---
                   print("Response", r.status_code, r.text[:120])
                   y += 120
               x += 300
           PY
-
