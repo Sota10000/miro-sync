@@ -1,0 +1,38 @@
+name: sync-to-miro
+on:
+  push:
+    paths: ["*.yaml"]
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install libraries
+        run: pip install requests PyYAML
+      - name: Send to Miro
+        env:
+          MIRO_TOKEN: ${{ secrets.MIRO_TOKEN }}
+          MIRO_BOARD: ${{ secrets.MIRO_BOARD }}
+        run: |
+          python <<'PY'
+          import os, yaml, glob, requests
+          token  = os.environ['MIRO_TOKEN']
+          board  = os.environ['MIRO_BOARD']
+          hdr    = {'Authorization':f'Bearer {token}'}
+          colors = ['#CCFFCC','#CCE5FF','#FFF5CC','#FFD9E8','#E0CCFF','#D1FFC9']
+          x=0
+          for idx,file in enumerate(sorted(glob.glob("*.yaml"))):
+              y=0
+              data=yaml.safe_load(open(file))
+              for item in data:
+                  requests.post(
+                    f"https://api.miro.com/v2/boards/{board}/sticky_notes",
+                    headers=hdr,
+                    json={
+                      "data":{"content":item['text']},
+                      "style":{"fillColor":colors[idx%len(colors)]},
+                      "position":{"origin":"center","x":x,"y":y}
+                    })
+                  y+=120
+              x+=300
+          PY
