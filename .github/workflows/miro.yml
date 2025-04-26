@@ -1,14 +1,18 @@
 name: sync-to-miro
+
 on:
   push:
-    paths: ["*.yaml"]
+    paths: ["*.yaml"]       # YAML を編集したときだけ実行
+
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Install libraries
         run: pip install requests PyYAML
+
       - name: Send to Miro
         env:
           MIRO_TOKEN: ${{ secrets.MIRO_TOKEN }}
@@ -16,23 +20,32 @@ jobs:
         run: |
           python <<'PY'
           import os, yaml, glob, requests
-          token  = os.environ['MIRO_TOKEN']
-          board  = os.environ['MIRO_BOARD']
-          hdr    = {'Authorization':f'Bearer {token}'}
-          colors = ['#CCFFCC','#CCE5FF','#FFF5CC','#FFD9E8','#E0CCFF','#D1FFC9']
-          x=0
-          for idx,file in enumerate(sorted(glob.glob("*.yaml"))):
-              y=0
-              data=yaml.safe_load(open(file))
+          
+          token = os.environ['MIRO_TOKEN']
+          board = os.environ['MIRO_BOARD']
+          headers = {'Authorization': f'Bearer {token}'}
+          
+          colors = ['#CCFFCC', '#CCE5FF', '#FFF5CC', '#FFD9E8', '#E0CCFF', '#D1FFC9']
+          x = 0
+          
+          for idx, file in enumerate(sorted(glob.glob("*.yaml"))):
+              y = 0
+              data = yaml.safe_load(open(file))
+              
               for item in data:
-                  requests.post(
-                    f"https://api.miro.com/v2/boards/{board}/sticky_notes",
-                    headers=hdr,
-                    json={
-                      "data":{"content":item['text']},
-                      "style":{"fillColor":colors[idx%len(colors)]},
-                      "position":{"origin":"center","x":x,"y":y}
-                    })
-                  y+=120
-              x+=300
+                  # 付箋を作成し、レスポンスを r に受け取る
+                  r = requests.post(
+                      f"https://api.miro.com/v2/boards/{board}/sticky_notes",
+                      headers=headers,
+                      json={
+                        "data":   {"content": item['text']},
+                        "style":  {"fillColor": colors[idx % len(colors)]},
+                        "position": {"origin": "center", "x": x, "y": y}
+                      }
+                  )
+                  # ステータスと先頭 120 文字をログに出力
+                  print("Response", r.status_code, r.text[:120])
+                  y += 120
+              
+              x += 300
           PY
