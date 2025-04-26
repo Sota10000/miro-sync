@@ -24,8 +24,8 @@ jobs:
           board  = os.environ['MIRO_BOARD']
           hdr    = {'Authorization': f'Bearer {token}'}
 
-          colors = ['#CCFFCC', '#CCE5FF', '#FFF5CC',
-                    '#FFD9E8', '#E0CCFF', '#D1FFC9']
+        colors = ['light_yellow', 'light_green', 'light_blue',
+          'light_pink', 'violet', 'grey']
 
           x = 0
           for idx, file in enumerate(sorted(glob.glob("*.yaml"))):
