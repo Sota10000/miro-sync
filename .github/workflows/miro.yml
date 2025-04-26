@@ -32,7 +32,7 @@ jobs:
               y = 0
               data = yaml.safe_load(open(file))
               for item in data:
-                  # 付箋作成してレスポンスを r に受け取る
+                  # --- 付箋作成 ---
                   r = requests.post(
                       f"https://api.miro.com/v2/boards/{board}/sticky_notes",
                       headers=hdr,
@@ -42,10 +42,8 @@ jobs:
                         "position": {"origin": "center", "x": x, "y": y}
                       }
                   )
-                  # ステータスとエラーメッセージを 120 文字まで表示
+                  # --- レスポンスを表示 ---
                   print("Response", r.status_code, r.text[:120])
-                  
                   y += 120
               x += 300
           PY
-
