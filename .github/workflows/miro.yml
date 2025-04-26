@@ -44,6 +44,7 @@ jobs:
                   )
                   # ステータスとエラーメッセージを 120 文字まで表示
                   print("Response", r.status_code, r.text[:120])
+                  
                   y += 120
               x += 300
           PY
