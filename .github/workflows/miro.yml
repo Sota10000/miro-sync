@@ -2,7 +2,7 @@ name: sync-to-miro
 
 on:
   push:
-    paths: ["*.yaml"]       # YAML を編集したときだけ実行
+    paths: ["*.yaml"]
 
 jobs:
   sync:
@@ -20,32 +20,30 @@ jobs:
         run: |
           python <<'PY'
           import os, yaml, glob, requests
-          
-          token = os.environ['MIRO_TOKEN']
-          board = os.environ['MIRO_BOARD']
-          headers = {'Authorization': f'Bearer {token}'}
-          
-          colors = ['#CCFFCC', '#CCE5FF', '#FFF5CC', '#FFD9E8', '#E0CCFF', '#D1FFC9']
+          token  = os.environ['MIRO_TOKEN']
+          board  = os.environ['MIRO_BOARD']
+          hdr    = {'Authorization': f'Bearer {token}'}
+
+          colors = ['#CCFFCC', '#CCE5FF', '#FFF5CC',
+                    '#FFD9E8', '#E0CCFF', '#D1FFC9']
+
           x = 0
-          
           for idx, file in enumerate(sorted(glob.glob("*.yaml"))):
               y = 0
               data = yaml.safe_load(open(file))
-              
               for item in data:
-                  # 付箋を作成し、レスポンスを r に受け取る
+                  # 付箋作成してレスポンスを r に受け取る
                   r = requests.post(
                       f"https://api.miro.com/v2/boards/{board}/sticky_notes",
-                      headers=headers,
+                      headers=hdr,
                       json={
                         "data":   {"content": item['text']},
                         "style":  {"fillColor": colors[idx % len(colors)]},
                         "position": {"origin": "center", "x": x, "y": y}
                       }
                   )
-                  # ステータスと先頭 120 文字をログに出力
+                  # ステータスとエラーメッセージを 120 文字まで表示
                   print("Response", r.status_code, r.text[:120])
                   y += 120
-              
               x += 300
           PY
