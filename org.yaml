@@ -1,71 +1,52 @@
-# 【共同代表】
 - type: org
   id: CEO
-  label: CEO（あなた）｜ビジョン・戦略
+  label: 代表取締役 CEO（ビジョン／営業トップ／プロダクト統括）
   parent: ""
-
 - type: org
-  id: COO_CFO
-  label: COO&CFO（共同代表）｜財務・オペレーション
-  parent: CEO
-
-# 【技術部門】
+  id: CoCEO
+  label: 共同代表 Co-CEO（財務／リスク管理／法務責任者）
+  parent: ""
 - type: org
   id: CTO
-  label: CTO｜技術責任者
+  label: CTO（プロダクト開発統括・技術戦略）
   parent: CEO
-
 - type: org
-  id: VP_Engineering
-  label: VP of Engineering｜開発統括
+  id: CPO
+  label: CPO（プロダクトマネジメント統括）
   parent: CTO
-
 - type: org
-  id: AI_RD_Director
-  label: AI R&D Director｜AI新技術開発
+  id: AI_Lead
+  label: AIリサーチ＆プロダクト化責任者
   parent: CTO
-
 - type: org
-  id: Lead_Engineer
-  label: Lead Engineer｜開発リーダー
-  parent: VP_Engineering
-
-# 【事業開発・グロース部門】
+  id: BackendLead
+  label: バックエンドエンジニアリーダー
+  parent: CTO
 - type: org
-  id: Head_BizDev
-  label: Head of Business Development｜国内外提携・拡大
+  id: FrontendLead
+  label: フロントエンドエンジニアリーダー
+  parent: CTO
+- type: org
+  id: BizDevLead
+  label: BizDev責任者（GTM／アライアンス担当）
+  parent: CEO
+- type: org
+  id: FinanceLead
+  label: 財務責任者（資金調達・IR担当）
+  parent: CoCEO
+- type: org
+  id: LegalLead
+  label: 法務責任者（契約・コンプラ・国別対応）
+  parent: CoCEO
+- type: org
+  id: LocalManager
+  label: 地域統括マネージャー（各国展開担当）
+  parent: BizDevLead
+- type: org
+  id: CustomerSuccess
+  label: カスタマーサクセス責任者（選手・クラブ対応）
   parent: CEO
 
-- type: org
-  id: Asia_Expansion_Lead
-  label: Asia Expansion Leader｜ASEAN市場展開
-  parent: Head_BizDev
-
-# 【マーケ・プロダクト部門】
-- type: org
-  id: PMM
-  label: PMM（プロダクトマーケティングマネージャー）｜ユーザー拡大
-  parent: CEO
-
-# 【顧客成功・サポート部門】
-- type: org
-  id: Head_CS
-  label: Head of Customer Success｜選手・スカウト支援
-  parent: CEO
-
-# 【財務・リスク管理部門】
-- type: org
-  id: Financial_Controller
-  label: Financial Controller｜財務計画・予実管理
-  parent: COO_CFO
-
-- type: org
-  id: General_Counsel
-  label: General Counsel｜契約・規制対応（AI時代）
-  parent: COO_CFO
-
-# 【将来追加：CHRO（採用・人事）】
-- type: org
   id: CHRO
   label: CHRO（Chief HR Officer）｜採用・組織文化
   parent: CEO
