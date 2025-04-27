@@ -1,0 +1,12 @@
+- type: org
+  id: CEO
+  label: 代表取締役 CEO
+  parent: ""
+- type: org
+  id: CTO
+  label: CTO
+  parent: CEO
+- type: org
+  id: DEV
+  label: バックエンド
+  parent: CTO
