@@ -5,7 +5,7 @@ on:
     paths:
       - "**/*.yml"
       - "**/*.yaml"
-  workflow_dispatch:        # ← Actions 画面から手動でも実行できるように
+  workflow_dispatch:
 
 jobs:
   sync:
@@ -28,7 +28,6 @@ jobs:
           board  = os.environ['MIRO_BOARD']
           hdr    = {'Authorization': f'Bearer {token}'}
 
-          # 公式 16 色のうち失敗しない 8 色をローテーション
           colors = [
               'light_yellow', 'yellow',
               'light_green',  'green',
@@ -40,11 +39,15 @@ jobs:
           for idx, file in enumerate(sorted(glob.glob("*.yaml"))):
               y = 0
               for item in yaml.safe_load(open(file)):
+                  content = item.get('text') or item.get('label') or None
+                  if not content:
+                      continue  # contentが無いデータはスキップ
+
                   r = requests.post(
                       f"https://api.miro.com/v2/boards/{board}/sticky_notes",
                       headers=hdr,
                       json={
-                        "data": {"content": item['text']},
+                        "data": {"content": content},
                         "style": {"fillColor": colors[idx % len(colors)]},
                         "position": {"origin": "center", "x": x, "y": y}
                       }
